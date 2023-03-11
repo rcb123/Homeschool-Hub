@@ -3,5 +3,7 @@
 </script>
 
 <main>
-	<LoginForm />
+	<div class="lg:container mx-auto h-full w-full p-6">
+		<LoginForm />
+	</div>
 </main>
