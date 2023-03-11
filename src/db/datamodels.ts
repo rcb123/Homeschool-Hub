@@ -1,0 +1,60 @@
+import type { Role } from '$lib/types';
+
+export interface BaseModel {
+	id?: string | null;
+	created_at: Date;
+	updated_at: Date;
+}
+
+export interface AppUser extends BaseModel {
+	email: string;
+	name: string;
+	avatar?: string;
+	role: Role;
+}
+
+export interface Course extends BaseModel {
+	name: string;
+	teacher_id: string;
+	description: string;
+}
+
+export interface Lesson extends BaseModel {
+	name: string;
+	course_id: string;
+	date: Date;
+	time: Date;
+	duration: string;
+	status: string;
+}
+
+export interface Assignment extends BaseModel {
+	name: string;
+	lesson_id: string;
+	description: string;
+	deadline: string;
+	status: string;
+}
+
+export interface Resource extends BaseModel {
+	name: string;
+	course_id: string;
+	type: string;
+	url: string;
+}
+
+export interface Category extends BaseModel {
+	name: string;
+	server_id: string;
+}
+
+export interface Channel extends BaseModel {
+	name: string;
+	category_id: string;
+}
+
+export interface Message extends BaseModel {
+	channel_id: string;
+	text: string;
+	sent_by: string;
+}
