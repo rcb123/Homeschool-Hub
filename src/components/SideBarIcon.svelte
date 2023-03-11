@@ -1,13 +1,11 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	export let icon: string;
 	export let tooltip: string;
 	export let ref: string;
 </script>
 
 <a class="sidebar-icon group block" href={ref}>
-	<Icon {icon} />
-
+	{icon}
 	<span class="sidebar-tooltip group-hover:scale-100">{tooltip}</span>
 </a>
 

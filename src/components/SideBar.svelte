@@ -1,10 +1,7 @@
 <script lang="ts">
 	import SideBarIcon from './SideBarIcon.svelte';
-	import { CommunityStore } from '$lib/stores';
 
-	let servers: { name: string; id: string; logo: string; }[];
-
-	servers = $CommunityStore;
+	let servers: { name: string; id: string; logo: string; }[] = [];
 </script>
 
 <div class="fixed top-0 left-0 h-screen w-16 m-0 flex flex-col bg-gray-900 text-white shadow-lg z-10">
