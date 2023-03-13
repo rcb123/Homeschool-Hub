@@ -8,15 +8,26 @@
 	let responseData: ActionFailure<{ status: number; data: any }>;
 	let response: { emailError?: any; passwordError?: any; error?: any }[];
 
+	let emailError: string | null = null;
+	let passwordError: string | null = null;
+	let error: string | null = null;
+
 	const handleSubmit = async () => {
-		responseData = login(email, password);
+		responseData = await login(email, password);
 		let responseJSON = await responseData.json();
 		response = await JSON.parse(responseJSON.data);
-	};
+		if (responseData.status == 200) {
+			window.location.href = '/';
+		}
 
-	$: if (responseData.status == 200) {
-		window.location.href = '/';
-	}
+		let emailErrorIndex = response[0].emailError;
+		let passwordErrorIndex = response[0].passwordError;
+		let errorIndex = response[0].error;
+
+		emailError = response[emailErrorIndex];
+		passwordError = response[passwordErrorIndex];
+		error = response[errorIndex];
+	};
 </script>
 
 <form
@@ -32,11 +43,11 @@
 			type="email"
 			name="email"
 			bind:value={email}
-			class="input w-full max-w-xs {response[0].emailError ? 'input-error' : 'input-bordered'}"
+			class="input w-full max-w-xs {emailError ? 'input-error' : 'input-bordered'}"
 		/>
 		<label for="email" class="label">
-			{#if response[0].emailError}
-				<span class="label-text-alt text-error">{response[0].emailError}</span>
+			{#if emailError}
+				<span class="label-text-alt text-error">{emailError}</span>
 			{/if}
 		</label>
 	</div>
@@ -48,20 +59,20 @@
 			type="password"
 			name="password"
 			bind:value={password}
-			class="input w-full max-w-xs {response[0].passwordError ? 'input-error' : 'input-bordered'}"
+			class="input w-full max-w-xs {passwordError ? 'input-error' : 'input-bordered'}"
 		/>
 		<label for="password" class="label">
-			{#if response[0].passwordError}
-				<span class="label-text-alt text-error">{response[0].passwordError}</span>
+			{#if passwordError}
+				<span class="label-text-alt text-error">{passwordError}</span>
 			{/if}
 		</label>
 	</div>
 	<div class="w-full max-w-xs">
 		<button class="btn btn-primary w-full" type="submit">Login</button>
 	</div>
-	{#if response[0].error}
+	{#if error}
 		<div class="w-full rounded-lg bg-slate-100 mt-4 p-4 max-w-xs">
-			<p class="text-base text-center font-medium text-error">{response[0].error}</p>
+			<p class="text-base text-center font-medium text-error">{error}</p>
 		</div>
 	{/if}
 </form>

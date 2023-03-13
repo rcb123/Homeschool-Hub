@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { ActionFailure } from '@sveltejs/kit';
 	import { register } from '$root/services/auth';
 
 	let name = '';
@@ -7,13 +8,49 @@
 	let passwordConfirm = '';
 	let role: 'student' | 'teacher';
 	let terms: boolean = false;
-	let responseData;
-	let response: { error: any }[];
+
+	let responseData: ActionFailure<{ status: number; data: any }>;
+	let response: {
+		nameError?: any;
+		emailError?: any;
+		passwordError?: any;
+		passwordMatchError?: any;
+		termsError?: any;
+		error?: any;
+	}[];
+
+	let nameError: string | null = null;
+	let emailError: string | null = null;
+	let passwordError: string | null = null;
+	let passwordMatchError: string | null = null;
+	let roleError: string | null = null;
+	let termsError: string | null = null;
+	let error: string | null = null;
 
 	const handleSubmit = async () => {
-		responseData = register(name, email, password, passwordConfirm, role, terms);
+		responseData = await register(name, email, password, passwordConfirm, role, terms);
 		let responseJSON = await responseData.json();
 		response = await JSON.parse(responseJSON.data);
+
+		if (responseData.status == 200) {
+			window.location.href = '/';
+		}
+
+		let nameErrorIndex = response[0].nameError;
+		let emailErrorIndex = response[0].emailError;
+		let passwordErrorIndex = response[0].passwordError;
+		let passwordMatchErrorIndex = response[0].passwordMatchError;
+		let roleErrorIndex = response[0].roleError;
+		let termsErrorIndex = response[0].termsError;
+		let errorIndex = response[0].error;
+
+		nameError = response[nameErrorIndex];
+		emailError = response[emailErrorIndex];
+		passwordError = response[passwordErrorIndex];
+		passwordMatchError = response[passwordMatchErrorIndex];
+		roleError = response[roleErrorIndex];
+		termsError = response[termsErrorIndex];
+		error = response[errorIndex];
 	};
 </script>
 
@@ -31,13 +68,13 @@
 		<input
 			type="text"
 			name="name"
-			class="input w-full max-w-xs {response[0].nameError ? 'input-error' : 'input-bordered'}"
+			class="input w-full max-w-xs {nameError ? 'input-error' : 'input-bordered'}"
 			bind:value={name}
 		/>
 		<label for="name" class="label">
 			<span class="label-text-alt text-error">
-				{#if response[0].nameError}
-					<span class="label-text-alt text-error">{response[0].nameError}</span>
+				{#if nameError}
+					<span class="label-text-alt text-error">{nameError}</span>
 				{/if}
 			</span>
 		</label>
@@ -51,13 +88,13 @@
 		<input
 			type="email"
 			name="email"
-			class="input w-full max-w-xs {response[0].emailError ? 'input-error' : 'input-bordered'}"
+			class="input w-full max-w-xs {emailError ? 'input-error' : 'input-bordered'}"
 			bind:value={email}
 		/>
 		<label for="email" class="label">
 			<span class="label-text-alt text-error">
-				{#if response[0].emailError}
-					<span class="label-text-alt text-error">{response[0].emailError}</span>
+				{#if emailError}
+					<span class="label-text-alt text-error">{emailError}</span>
 				{/if}
 			</span>
 		</label>
@@ -70,13 +107,13 @@
 		</label>
 		<input
 			type="password"
-			class="input w-full max-w-xs {response[0].passwordError ? 'input-error' : 'input-bordered'}"
+			class="input w-full max-w-xs {passwordError ? 'input-error' : 'input-bordered'}"
 			bind:value={password}
 		/>
 		<label for="password" class="label">
 			<span class="label-text-alt text-error">
-				{#if response[0].passwordError}
-					<span class="label-text-alt text-error">{response[0].passwordError}</span>
+				{#if passwordError}
+					<span class="label-text-alt text-error">{passwordError}</span>
 				{/if}
 			</span>
 		</label>
@@ -89,15 +126,15 @@
 		</label>
 		<input
 			type="password"
-			class="input w-full max-w-xs {response[0].passwordMatchError
+			class="input w-full max-w-xs {passwordMatchError
 				? 'input-error'
 				: 'input-bordered'}"
 			bind:value={passwordConfirm}
 		/>
 		<label for="passwordConfirm" class="label">
 			<span class="label-text-alt text-error">
-				{#if response[0].passwordMatchError}
-					<span class="label-text-alt text-error">{response[0].passwordMatchError}</span>
+				{#if passwordMatchError}
+					<span class="label-text-alt text-error">{passwordMatchError}</span>
 				{/if}
 			</span>
 		</label>
@@ -115,8 +152,8 @@
 		</select>
 		<label for="role" class="label">
 			<span class="label-text-alt text-error">
-				{#if response[0].roleError}
-					<span class="label-text-alt text-error">{response[0].roleError}</span>
+				{#if roleError}
+					<span class="label-text-alt text-error">{roleError}</span>
 				{/if}
 			</span>
 		</label>
@@ -128,13 +165,13 @@
 			<input
 				type="checkbox"
 				name="terms"
-				class="checkbox checkbox-primary {response[0].termsError ? 'border-error' : ''}"
+				class="checkbox checkbox-primary {termsError ? 'border-error' : ''}"
 			/>
 			<span class="label-text">I accept the terms and conditions</span>
 		</label>
 		<label for="terms" class="label">
-			{#if response[0].termsError}
-				<span class="label-text-alt text-error">{response[0].termsError}</span>
+			{#if termsError}
+				<span class="label-text-alt text-error">{termsError}</span>
 			{/if}
 		</label>
 	</div>
@@ -144,16 +181,16 @@
 		<button type="submit">Register</button>
 	</div>
 </form>
-{#if response.status == 200}
+{#if responseData.status == 200}
 	<div class="mt-10 bg-slate-50 rounded-xl p-6 shadow-lg w-full max-w-xs mx-auto text-center">
 		<p>Verification email sent!</p>
 		<p>Please check your email</p>
 	</div>
 {/if}
-{#if response[0].error}
+{#if error}
 	<div
 		class="mt-10 bg-slate-50 rounded-xl p-6 shadow-lg w-full max-w-xs mx-auto text-center font-medium"
 	>
-		<p class="text-error">{response[0].error}</p>
+		<p class="text-error">{error}</p>
 	</div>
 {/if}
