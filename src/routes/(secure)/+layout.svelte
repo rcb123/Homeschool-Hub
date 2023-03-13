@@ -4,7 +4,11 @@
 </script>
 
 {#if !$page.data.session}
-	<LoginForm />
+	<main>
+		<div class="lg:container mx-auto h-full w-full p-6">
+			<LoginForm />
+		</div>
+	</main>
 {:else}
 	<slot />
 {/if}
