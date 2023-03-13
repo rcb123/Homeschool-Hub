@@ -20,7 +20,7 @@
 	});
 </script>
 
-<div class="flex flex-row bg-primary text-primary-content h-screen w-screen overscroll-none">
+<div class="bg-base text-base-content overscroll-none">
 	<SideBar />
 	<div class="ml-16">
 		<slot />
