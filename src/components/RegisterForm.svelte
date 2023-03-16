@@ -178,10 +178,10 @@
 
 	<!-- Submit Buttom -->
 	<div class="w-full max-w-xs">
-		<button type="submit">Register</button>
+		<button type="submit" class="btn btn-primary w-full">Register</button>
 	</div>
 </form>
-{#if responseData.status == 200}
+{#if responseData?.status == 200}
 	<div class="mt-10 bg-slate-50 rounded-xl p-6 shadow-lg w-full max-w-xs mx-auto text-center">
 		<p>Verification email sent!</p>
 		<p>Please check your email</p>

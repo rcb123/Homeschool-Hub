@@ -5,7 +5,7 @@
 </script>
 
 <div class="fixed top-0 left-0 h-screen w-16 m-0 flex flex-col bg-neutral text-neutral-content shadow-lg z-10">
-	<SideBarIcon icon="🔥" tooltip="Homeschool Hub" ref="/hub" />
+	<SideBarIcon icon="🔥" tooltip="Homeschool Hub" ref="/" />
 	<hr class="border-solid border-2 my-1 border-accent-focus" />
 
 	{#each servers as server}
