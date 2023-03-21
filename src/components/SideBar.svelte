@@ -13,7 +13,7 @@
 	{/each}
 
 	<SideBarIcon icon="➕" tooltip="Add a Course" ref="/add" />
-	<SideBarIcon icon="⚡️" tooltip="Join a Server" ref="/join" />
+	<SideBarIcon icon="⚡️" tooltip="Resource Hub" ref="/resources" />
 
 	<!-- Sidebar footer -->
 	<div class="flex flex-col absolute w-full bottom-0 pb-2">
