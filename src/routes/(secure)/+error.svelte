@@ -12,7 +12,7 @@
 			persists.
 		</p>
 		<div class="flex flex-row justify-evenly py-4">
-			<a href="/">
+			<a href="/hub">
 				<button class="btn btn-accent text-neutral-content normal-case">Head Back</button>
 			</a>
 			<a href="/report">
