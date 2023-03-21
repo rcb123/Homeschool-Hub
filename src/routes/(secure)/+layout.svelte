@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import LoginForm from '$components/LoginForm.svelte';
+	import Header from '$components/Header.svelte';
 </script>
 
 {#if !$page.data.session}
@@ -10,5 +11,6 @@
 		</div>
 	</main>
 {:else}
+	<Header />
 	<slot />
 {/if}
