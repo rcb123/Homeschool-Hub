@@ -27,7 +27,7 @@ export const user: Writable<userStore> = writable(defaultUserStore);
 export const appUser: Writable<AppUser> = writable();
 
 // User role state
-export const userRole = writable('');
+export const userRole: Writable<'teacher' | 'student' | null> = writable(null);
 
 // Course store
 export const courses: Writable<Course[]> = writable([]);
