@@ -34,12 +34,13 @@ export async function register(
 
 	if (validationError) {
 		return fail(400, {
-			nameError,
-			emailError,
-			passwordError,
-			passwordMatchError,
-			roleError,
-			acceptedTerms
+			nameError: nameError,
+			emailError: emailError,
+			passwordError: passwordError,
+			passwordMatchError: passwordMatchError,
+			roleError: roleError,
+			termsError: acceptedTerms,
+			error: null
 		});
 	}
 
@@ -53,11 +54,28 @@ export async function register(
 	// either that or modify the trigger for on register
 
 	if (error) {
-		return fail(400, { error });
+		return fail(400, {
+			nameError: nameError,
+			emailError: emailError,
+			passwordError: passwordError,
+			passwordMatchError: passwordMatchError,
+			roleError: roleError,
+			termsError: acceptedTerms,
+			error: error
+		});
 	}
 
 	return {
-		status: 200
+		status: 200,
+		data: {
+			nameError: nameError,
+			emailError: emailError,
+			passwordError: passwordError,
+			passwordMatchError: passwordMatchError,
+			roleError: roleError,
+			termsError: acceptedTerms,
+			error: error
+		}
 	};
 }
 
@@ -67,19 +85,24 @@ export async function login(email: string | null, password: string | null) {
 	const validationError = emailError || passwordError;
 
 	if (validationError) {
-		return fail(400, { emailError, passwordError });
+		return fail(400, { emailError: emailError, passwordError: passwordError, error: null });
 	}
-
+	
 	const { error } = await supabase.auth.signInWithPassword({
 		email: email,
 		password: password
 	});
 
 	if (error) {
-		return fail(400, { error });
+		return fail(400, { emailError: emailError, passwordError: passwordError, error: error });
 	}
 
 	return {
-		status: 200
+		status: 200,
+		data: {
+			emailError: emailError,
+			passwordError: passwordError,
+			error: error
+		}
 	};
 }

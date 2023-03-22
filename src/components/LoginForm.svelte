@@ -1,32 +1,32 @@
 <script lang="ts">
 	import type { ActionFailure } from '@sveltejs/kit';
 	import { login } from '$root/services/auth';
+	import type { AuthError } from '@supabase/supabase-js';
 
 	let email: string | null;
 	let password: string | null;
 
-	let responseData: ActionFailure<{ status: number; data: any }>;
-	let response: { emailError?: any; passwordError?: any; error?: any }[];
+	let response:
+		| {
+				status: number | string;
+				data: { emailError: string | null; passwordError: string | null; error: string | null };
+		  }
+		| ActionFailure<{ emailError: string | null; passwordError: string | null; error: AuthError }>;
 
 	let emailError: string | null = null;
 	let passwordError: string | null = null;
-	let error: string | null = null;
+	let error: string | AuthError | null = null;
 
 	const handleSubmit = async () => {
-		responseData = await login(email, password);
-		let responseJSON = await responseData.json();
-		response = await JSON.parse(responseJSON.data);
-		if (responseData.status == 200) {
+		response = await login(email, password);
+		console.log(response);
+		if (response.status == 200) {
 			window.location.href = '/';
 		}
 
-		let emailErrorIndex = response[0].emailError;
-		let passwordErrorIndex = response[0].passwordError;
-		let errorIndex = response[0].error;
-
-		emailError = response[emailErrorIndex];
-		passwordError = response[passwordErrorIndex];
-		error = response[errorIndex];
+		emailError = response.data.emailError;
+		passwordError = response.data.passwordError;
+		error = response.data.error;
 	};
 </script>
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ActionFailure } from '@sveltejs/kit';
 	import { register } from '$root/services/auth';
+	import type { AuthError } from '@supabase/supabase-js';
 
 	let name = '';
 	let email = '';
@@ -9,15 +10,28 @@
 	let role: 'student' | 'teacher';
 	let terms: boolean = false;
 
-	let responseData: ActionFailure<{ status: number; data: any }>;
-	let response: {
-		nameError?: any;
-		emailError?: any;
-		passwordError?: any;
-		passwordMatchError?: any;
-		termsError?: any;
-		error?: any;
-	}[];
+	let response:
+		| {
+				status: number | string;
+				data: {
+					nameError: string | null;
+					emailError: string | null;
+					passwordError: string | null;
+					passwordMatchError: string | null;
+					roleError: string | null;
+					termsError: string | null;
+					error: string | null;
+				};
+		  }
+		| ActionFailure<{
+				nameError: string | null;
+				emailError: string | null;
+				passwordError: string | null;
+				passwordMatchError: string | null;
+				roleError: string | null;
+				termsError: string | null;
+				error: AuthError;
+		  }>;
 
 	let nameError: string | null = null;
 	let emailError: string | null = null;
@@ -25,32 +39,22 @@
 	let passwordMatchError: string | null = null;
 	let roleError: string | null = null;
 	let termsError: string | null = null;
-	let error: string | null = null;
+	let error: string | AuthError | null = null;
 
 	const handleSubmit = async () => {
-		responseData = await register(name, email, password, passwordConfirm, role, terms);
-		let responseJSON = await responseData.json();
-		response = await JSON.parse(responseJSON.data);
+		response = await register(name, email, password, passwordConfirm, role, terms);
 
-		if (responseData.status == 200) {
+		if (response.status == 200) {
 			window.location.href = '/';
 		}
 
-		let nameErrorIndex = response[0].nameError;
-		let emailErrorIndex = response[0].emailError;
-		let passwordErrorIndex = response[0].passwordError;
-		let passwordMatchErrorIndex = response[0].passwordMatchError;
-		let roleErrorIndex = response[0].roleError;
-		let termsErrorIndex = response[0].termsError;
-		let errorIndex = response[0].error;
-
-		nameError = response[nameErrorIndex];
-		emailError = response[emailErrorIndex];
-		passwordError = response[passwordErrorIndex];
-		passwordMatchError = response[passwordMatchErrorIndex];
-		roleError = response[roleErrorIndex];
-		termsError = response[termsErrorIndex];
-		error = response[errorIndex];
+		nameError = response.data.nameError;
+		emailError = response.data.emailError;
+		passwordError = response.data.passwordError;
+		passwordMatchError = response.data.passwordMatchError;
+		roleError = response.data.roleError;
+		termsError = response.data.termsError;
+		error = response.data.error;
 	};
 </script>
 
@@ -126,9 +130,7 @@
 		</label>
 		<input
 			type="password"
-			class="input w-full max-w-xs {passwordMatchError
-				? 'input-error'
-				: 'input-bordered'}"
+			class="input w-full max-w-xs {passwordMatchError ? 'input-error' : 'input-bordered'}"
 			bind:value={passwordConfirm}
 		/>
 		<label for="passwordConfirm" class="label">
@@ -181,7 +183,7 @@
 		<button type="submit" class="btn btn-primary w-full">Register</button>
 	</div>
 </form>
-{#if responseData?.status == 200}
+{#if response?.status == 200}
 	<div class="mt-10 bg-slate-50 rounded-xl p-6 shadow-lg w-full max-w-xs mx-auto text-center">
 		<p>Verification email sent!</p>
 		<p>Please check your email</p>
