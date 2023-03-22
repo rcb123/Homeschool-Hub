@@ -19,6 +19,7 @@
 					forums.
 				</p>
 				<a href="/register" class="btn btn-primary">Register Now</a>
+				<a href="/login" class="btn btn-primary">Login</a>
 			</div>
 		</div>
 	</div>
