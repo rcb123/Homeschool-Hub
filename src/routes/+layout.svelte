@@ -3,8 +3,6 @@
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 
-	import SideBar from '$components/SideBar.svelte';
-
 	import '$root/app.css';
 
 	onMount(() => {
@@ -20,9 +18,6 @@
 	});
 </script>
 
-<div class="bg-base text-base-content overscroll-none">
-	<SideBar />
-	<div class="ml-16">
-		<slot />
-	</div>
+<div class="bg-white text-base-content overscroll-none">
+	<slot />
 </div>
