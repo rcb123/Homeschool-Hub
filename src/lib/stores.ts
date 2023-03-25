@@ -1,5 +1,5 @@
 import { get, writable, type Writable } from 'svelte/store';
-import type { User } from '@supabase/supabase-js';
+import type { AuthSession, PostgrestError, User } from '@supabase/supabase-js';
 import type {
 	AppUser,
 	Course,
@@ -33,7 +33,7 @@ export const userRole: Writable<'teacher' | 'student' | null> = writable(null);
 export const courses: Writable<Course[]> = writable([]);
 
 // Selected course store
-export const selectedCourse = writable(null);
+export const selectedCourse: Writable<Course> = writable();
 
 // Course Students Store
 export const courseStudents: Writable<{ course: Course; students: User[] }[]> = writable([]);
@@ -41,7 +41,7 @@ export const courseStudents: Writable<{ course: Course; students: User[] }[]> = 
 // Lessons store
 export const lessons: Writable<Lesson[]> = writable([]);
 
-// Assignments store
+// Assignments store (all assignments across all stores)
 export const assignments: Writable<Assignment[]> = writable([]);
 
 // Resources store
@@ -64,21 +64,13 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 				user: session.user
 			};
 		});
-		const res = await supabase.from('users').select().eq('id', session.user.id);
-		if (res.data) {
-			appUser.update((oldStore) => {
-				return {
-					...oldStore,
-					id: res.data.id,
-					created_at: res.data.created_at,
-					updated_at: res.data.updated_at,
-					email: res.data.email,
-					name: res.data.name,
-					avatar: res.data.avatar,
-					role: res.data.role
-				};
-			});
-		} else console.log(res.error);
+		const res = await supabase.from('users').select().eq('auth_id', session.user.id);
+		if (res.error) {
+			console.log(res.error);
+		} else {
+			const newUser: AppUser = res.data[0] as AppUser;
+			appUser.set(newUser);
+		}
 	} else if (event == 'SIGNED_OUT') {
 		user.set(defaultUserStore);
 
@@ -89,12 +81,13 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 
 export default {
 	courses: {
-		getAll: async () => {
+		getAll: async (session: AuthSession) => {
+			const user_id = session.user.id;
 			// Retrieve course ids for courses the user is enrolled in
 			const enrollmentsRes = await supabase
 				.from('enrollments')
 				.select('course_id')
-				.eq('student_id', get(user).user?.auth_id);
+				.eq('student_id', user_id);
 
 			if (enrollmentsRes.error) {
 				console.log(enrollmentsRes.error);
@@ -105,7 +98,7 @@ export default {
 			const courseIds = enrollmentsRes.data?.map((enrollment) => enrollment.course_id);
 
 			// Retrieve only the courses that match the course ids
-			const coursesRes = await supabase.from('course').select('*').in('id', courseIds);
+			const coursesRes = await supabase.from('courses').select('*').in('id', courseIds);
 
 			if (coursesRes.error) {
 				console.log(coursesRes.error);
@@ -114,10 +107,20 @@ export default {
 			}
 
 			courses.set(coursesRes.data as Course[]);
-		}
-	},
-	lessons: {
-		getAll: async (course_id: string) => {
+		},
+		// Finds match with given course_id from courses store
+		getOne: (course_id: string) => {
+			const storedCourses = get(courses);
+			if (!storedCourses) {
+				console.log('No courses found');
+				return;
+			}
+			function match(course: Course) {
+				return course.id == course_id;
+			}
+			return storedCourses.find(match);
+		},
+		getLessons: async (course_id: string) => {
 			const storedCourses = get(courses);
 			if (!storedCourses) {
 				console.log('No courses found');
@@ -130,22 +133,72 @@ export default {
 				.in('course_id', courseIds)
 				.eq('course_id', course_id);
 			if (res.data) {
+				return res.data as Lesson[];
+			} else {
+				console.log(res.error);
+				return;
+			}
+		}
+	},
+	lessons: {
+		getAll: async () => {
+			const storedCourses = get(courses);
+			if (!storedCourses) {
+				console.log('No courses found');
+				return;
+			}
+			const courseIds = storedCourses.map((course) => course.id);
+			const res = await supabase.from('lessons').select('*').in('course_id', courseIds);
+			if (res.data) {
 				lessons.set(res.data as Lesson[]);
 			} else {
 				console.log(res.error);
 				lessons.set([]);
 			}
+		},
+		getOne: async (lesson_id: string) => {
+			const storedLessons = get(lessons);
+			if (!storedLessons) {
+				console.log('No lessons found');
+				return;
+			}
+			function match(lesson: Lesson) {
+				return lesson.id == lesson_id;
+			}
+			return storedLessons.find(match);
 		}
 	},
 	assignments: {
-		getAll: async (lesson_id: string) => {
-			const res = await supabase.from('assignments').select().eq('lesson_id', lesson_id);
+		getAll: async () => {
+			const storedLessons = get(lessons);
+			if (!storedLessons) {
+				console.log('No lessons found');
+				return;
+			}
+			const lessonIds = storedLessons.map((lesson) => lesson.id);
+			const res = await supabase
+				.from('assignments')
+				.select('*')
+				.in('lesson_id', lessonIds)
+				.order('deadline');
+
 			if (res.data) {
 				assignments.set(res.data as Assignment[]);
 			} else {
 				console.log(res.error);
 				assignments.set([]);
 			}
+		},
+		getOne: async (assignment_id: string) => {
+			const storedAssignments = get(assignments);
+			if (!storedAssignments) {
+				console.log('No assignments found');
+				return;
+			}
+			function match(assignment: Assignment) {
+				return assignment.id == assignment_id;
+			}
+			return storedAssignments.find(match);
 		}
 	}
 };
