@@ -19,6 +19,6 @@ export const load = (async ({ params }) => {
 
 		throw error(404, 'Assignment not found');
 	} else {
-		throw error(500, 'User not signed in')
+		throw error(500, 'User not signed in');
 	}
 }) satisfies PageLoad;
