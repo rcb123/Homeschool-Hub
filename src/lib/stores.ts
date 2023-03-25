@@ -1,4 +1,4 @@
-import { writable, type Writable } from 'svelte/store';
+import { get, writable, type Writable } from 'svelte/store';
 import type { User } from '@supabase/supabase-js';
 import type {
 	AppUser,
@@ -90,26 +90,47 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 export default {
 	courses: {
 		getAll: async () => {
-			const res = await supabase.from('courses').select().order('name', {
-				ascending: true
-			});
-			if (res.data) {
-				courses.update(() => {
-					return res.data;
-				});
-			} else {
-				console.log(res.error);
+			// Retrieve course ids for courses the user is enrolled in
+			const enrollmentsRes = await supabase
+				.from('enrollments')
+				.select('course_id')
+				.eq('student_id', get(user).user?.auth_id);
+
+			if (enrollmentsRes.error) {
+				console.log(enrollmentsRes.error);
 				courses.set([]);
+				return;
 			}
+
+			const courseIds = enrollmentsRes.data?.map((enrollment) => enrollment.course_id);
+
+			// Retrieve only the courses that match the course ids
+			const coursesRes = await supabase.from('course').select('*').in('id', courseIds);
+
+			if (coursesRes.error) {
+				console.log(coursesRes.error);
+				courses.set([]);
+				return;
+			}
+
+			courses.set(coursesRes.data as Course[]);
 		}
 	},
 	lessons: {
-		getAll: async (course_id: number) => {
-			const res = await supabase.from('courses').select().eq('course_id', course_id);
+		getAll: async (course_id: string) => {
+			const storedCourses = get(courses);
+			if (!storedCourses) {
+				console.log('No courses found');
+				return;
+			}
+			const courseIds = storedCourses.map((course) => course.id);
+			const res = await supabase
+				.from('lessons')
+				.select()
+				.in('course_id', courseIds)
+				.eq('course_id', course_id);
 			if (res.data) {
-				lessons.update(() => {
-					return res.data;
-				});
+				lessons.set(res.data as Lesson[]);
 			} else {
 				console.log(res.error);
 				lessons.set([]);
@@ -117,12 +138,10 @@ export default {
 		}
 	},
 	assignments: {
-		getAll: async (lesson_id: number) => {
-			const res = await supabase.from('courses').select().eq('lesson_id', lesson_id)
+		getAll: async (lesson_id: string) => {
+			const res = await supabase.from('assignments').select().eq('lesson_id', lesson_id);
 			if (res.data) {
-				assignments.update(() => {
-					return res.data;
-				});
+				assignments.set(res.data as Assignment[]);
 			} else {
 				console.log(res.error);
 				assignments.set([]);

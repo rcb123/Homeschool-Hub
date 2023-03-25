@@ -1,4 +1,4 @@
-import type { Role } from '$lib/types';
+import type { Role, UserStatus } from '$lib/types';
 
 export interface BaseModel {
 	id?: string | null;
@@ -11,6 +11,15 @@ export interface AppUser extends BaseModel {
 	name: string;
 	avatar?: string;
 	role: Role;
+	status: UserStatus;
+	auth_id: string | null;
+}
+
+export interface Enrollment {
+	id?: string | null;
+	student_id: string | null;
+	course_id: string | null;
+	enrolled_at: Date;
 }
 
 export interface Course extends BaseModel {
