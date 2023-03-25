@@ -9,7 +9,7 @@ export const load = (async ({ params }) => {
 	} = await supabase.auth.getSession();
 	if (session) {
 		await db.courses.getAll(session);
-		
+
 		const course = await db.courses.getOne(params.courseID);
 		if (course) {
 			return course;
@@ -17,6 +17,6 @@ export const load = (async ({ params }) => {
 
 		throw error(404, 'Course not found');
 	} else {
-		throw error(500, 'User not signed in')
+		throw error(500, 'User not signed in');
 	}
 }) satisfies PageLoad;
