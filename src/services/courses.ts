@@ -19,7 +19,7 @@ export async function updateCourse(course_id: number, name: string, description:
 		.update({ name: name, description: description })
 		.eq('id', course_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -29,7 +29,7 @@ export async function updateCourse(course_id: number, name: string, description:
 export async function deleteCourse(course_id: number) {
 	const response = await supabase.from('courses').delete().eq('id', course_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -50,7 +50,7 @@ export async function createCategory(name: string, server_id: number) {
 export async function updateCategory(category_id: number, name: string) {
 	const response = await supabase.from('categories').update({ name: name }).eq('id', category_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -60,7 +60,7 @@ export async function updateCategory(category_id: number, name: string) {
 export async function deleteCategory(category_id: number) {
 	const response = await supabase.from('categories').delete().eq('id', category_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -82,7 +82,7 @@ export async function createChannel(name: string, category_id: number) {
 export async function updateChannel(channel_id: number, name: string) {
 	const response = await supabase.from('channels').update({ name: name }).eq('id', channel_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -92,7 +92,7 @@ export async function updateChannel(channel_id: number, name: string) {
 export async function deleteChannel(channel_id: number) {
 	const response = await supabase.from('channels').delete().eq('id', channel_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -114,7 +114,7 @@ export async function createMessage(channel_id: number, content: string, sent_by
 export async function updateMessage(message_id: number, content: string) {
 	const response = await supabase.from('messages').update({ text: content }).eq('id', message_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -124,7 +124,7 @@ export async function updateMessage(message_id: number, content: string) {
 export async function deleteMessage(message_id: number) {
 	const response = await supabase.from('messages').delete().eq('id', message_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 

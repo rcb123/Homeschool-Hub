@@ -9,18 +9,16 @@ export async function createLesson(
 	duration: number,
 	status: string
 ) {
-	const response = await supabase
-		.from('lessons')
-		.insert([
-			{
-				name: name,
-				course_id: course_id,
-				date: date,
-				time: time,
-				duration: duration,
-				status: status
-			}
-		]);
+	const response = await supabase.from('lessons').insert([
+		{
+			name: name,
+			course_id: course_id,
+			date: date,
+			time: time,
+			duration: duration,
+			status: status
+		}
+	]);
 
 	if (response.error) {
 		throw error(500, response.error);
@@ -42,7 +40,7 @@ export async function updateLesson(
 		.update({ name: name, date: date, time: time, duration: duration, status: status })
 		.eq('id', lesson_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -52,7 +50,7 @@ export async function updateLesson(
 export async function deleteLesson(lesson_id: number) {
 	const response = await supabase.from('lessons').delete().eq('id', lesson_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -66,17 +64,15 @@ export async function createAssignment(
 	status: string,
 	description = ''
 ) {
-	const response = await supabase
-		.from('assignments')
-		.insert([
-			{
-				name: name,
-				description: description,
-				lesson_id: lesson_id,
-				deadline: deadline,
-				status: status
-			}
-		]);
+	const response = await supabase.from('assignments').insert([
+		{
+			name: name,
+			description: description,
+			lesson_id: lesson_id,
+			deadline: deadline,
+			status: status
+		}
+	]);
 
 	if (response.error) {
 		throw error(500, response.error);
@@ -97,7 +93,7 @@ export async function updateAssignment(
 		.update({ name: name, description: description, deadline: deadline, status: status })
 		.eq('id', assignment_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 
@@ -107,7 +103,7 @@ export async function updateAssignment(
 export async function deleteAssignment(assignment_id: number) {
 	const response = await supabase.from('assignments').delete().eq('id', assignment_id);
 
-	if (error) {
+	if (response.error) {
 		throw error(500, response.error);
 	}
 

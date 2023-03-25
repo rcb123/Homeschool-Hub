@@ -79,7 +79,7 @@ export async function register(
 	};
 }
 
-export async function login(email: string | null, password: string | null) {
+export async function login(email: string, password: string) {
 	const emailError = isValidEmail(email);
 	const passwordError = isValidPassword(password);
 	const validationError = emailError || passwordError;
@@ -87,7 +87,7 @@ export async function login(email: string | null, password: string | null) {
 	if (validationError) {
 		return fail(400, { emailError: emailError, passwordError: passwordError, error: null });
 	}
-	
+
 	const { error } = await supabase.auth.signInWithPassword({
 		email: email,
 		password: password
