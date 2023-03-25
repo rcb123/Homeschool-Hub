@@ -13,10 +13,10 @@
 		</p>
 		<div class="flex flex-row justify-evenly py-4">
 			<a href="/">
-				<button class="btn btn-accent text-neutral-content normal-case">Head Back</button>
+				<button class="btn btn-primary text-white normal-case">Head Back</button>
 			</a>
 			<a href="/report">
-				<button class="btn btn-primary normal-case">Submit a Support Request</button>
+				<button class="btn btn-primary text-white normal-case">Submit a Support Request</button>
 			</a>
 		</div>
 		<p>Error: &#91;{$page.status}&#93; An error has occurred: {$page.error.message}</p>
