@@ -1,4 +1,10 @@
-<main class="flex flex-col h-screen w-[calc(100vw-4rem)]">
+<script lang="ts">
+	import SideBar from '$components/SideBar.svelte';
+	import Header from '$components/Header.svelte';
+</script>
+<SideBar />
+<main class="flex flex-col h-screen w-[calc(100vw-4rem)] ml-16">
+	<Header />
 	<div class="text-center mx-auto mt-[30vh] max-w-[30vw] min-w-[30rem]">
 		<h1 class="text-3xl font-medium">Submit a Problem Report 📝</h1>
 		<br />
