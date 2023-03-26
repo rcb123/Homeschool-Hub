@@ -18,8 +18,7 @@
 	let error: string | AuthError | null = null;
 
 	const handleSubmit = async () => {
-		response = await login(email, password);
-		console.log(response);
+		response = await login(email as string, password as string);
 		if (response.status == 200) {
 			window.location.href = '/';
 		}
