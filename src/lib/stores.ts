@@ -1,5 +1,5 @@
 import { get, writable, type Writable } from 'svelte/store';
-import type { AuthSession, PostgrestError, User } from '@supabase/supabase-js';
+import type { AuthSession, User } from '@supabase/supabase-js';
 import type {
 	AppUser,
 	Course,
@@ -10,9 +10,10 @@ import type {
 	Channel,
 	Message
 } from '$root/db/datamodels';
+import type { Role, UserStatus } from '$lib/types'
 import { supabase } from '$lib/supabaseClient';
 
-const defaultUserStore: userStore = {
+export const defaultUserStore: userStore = {
 	user: null
 };
 
@@ -23,8 +24,31 @@ export type userStore = {
 // Current user store, stores auth info
 export const user: Writable<userStore> = writable(defaultUserStore);
 
+export const defaultAppUserStore: appUserStore = {
+	id: null,
+	created_at: new Date(Date.now()),
+	updated_at: new Date(Date.now()),
+	email: '',
+	name: '',
+	role: 'student',
+	status: 'OFFLINE',
+	auth_id: null
+}
+
+export type appUserStore = {
+	id?: string | null;
+	created_at: Date;
+	updated_at: Date;
+	email: string;
+	name: string;
+	avatar?: string;
+	role: Role;
+	status: UserStatus;
+	auth_id: string | null;
+}
+
 // Current app user store, stores profile info
-export const appUser: Writable<AppUser> = writable();
+export const appUser: Writable<AppUser> = writable(defaultAppUserStore);
 
 // User role state
 export const userRole: Writable<'teacher' | 'student' | null> = writable(null);
@@ -57,25 +81,26 @@ export const channels: Writable<Channel[]> = writable([]);
 export const messages: Writable<Message[]> = writable([]);
 
 supabase.auth.onAuthStateChange(async (event, session) => {
+	console.log('auth change')
+	console.log(event)
 	if (event == 'SIGNED_IN' && session) {
-		user.update((oldStore) => {
-			return {
-				...oldStore,
-				user: session.user
-			};
-		});
+		console.log('event and session')
+		user.set({user: session.user});
 		const res = await supabase.from('users').select().eq('auth_id', session.user.id);
 		if (res.error) {
 			console.log(res.error);
 		} else {
+			console.log('setting new values')
 			const newUser: AppUser = res.data[0] as AppUser;
 			appUser.set(newUser);
+			console.log(appUser)
+			userRole.set(res.data[0].role);
+			console.log(userRole)
 		}
 	} else if (event == 'SIGNED_OUT') {
 		user.set(defaultUserStore);
-
-		// Create defaultAppUserStore for when nobody is signed in
-		// appUser.set(defaultAppUserStore);
+		appUser.set(defaultAppUserStore);
+		userRole.set(null);
 	}
 });
 
