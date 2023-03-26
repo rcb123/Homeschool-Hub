@@ -61,10 +61,10 @@ export async function deleteLesson(lesson_id: string) {
 
 export async function createAssignment(
 	name: string,
+	description = '',
 	lesson_id: string,
 	deadline: Date,
-	status: string,
-	description = ''
+	status: string
 ) {
 	const response = await supabase.from('assignments').insert([
 		{

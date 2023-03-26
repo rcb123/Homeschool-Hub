@@ -14,7 +14,6 @@ export const load = (async ({ params }) => {
 		if (course) {
 			return course;
 		}
-
 		throw error(404, 'Course not found');
 	} else {
 		throw error(500, 'User not signed in');
