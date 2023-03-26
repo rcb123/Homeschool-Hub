@@ -30,6 +30,7 @@ export interface Course extends BaseModel {
 
 export interface Lesson extends BaseModel {
 	name: string;
+	description: string;
 	course_id: string;
 	date: Date;
 	time: Date;
