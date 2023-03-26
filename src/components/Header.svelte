@@ -3,7 +3,7 @@
 
 	let paths = $page.url.pathname.split('/');
 	paths.shift();
-    paths = capitalizePaths(paths);
+	paths = capitalizePaths(paths);
 
 	function capitalizePaths(paths: string[]) {
 		return paths.map((path) => {
@@ -25,9 +25,27 @@
 		</div>
 	</div>
 	<div class="navbar-center">
-		<a class="btn btn-ghost normal-case text-xl" href="/">Homeschool Hub</a>
+		<a class="btn btn-ghost normal-case text-xl" href="/hub">Homeschool Hub</a>
 	</div>
 	<div class="navbar-end">
+		<a href="/account">
+			<button class="btn btn-ghost btn-circle">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-2.33 0-7 1.17-7 3v2h14v-2c0-1.83-4.67-3-7-3z"
+					/>
+				</svg>
+			</button>
+		</a>
 		<button class="btn btn-ghost btn-circle">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
