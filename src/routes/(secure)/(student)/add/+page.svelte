@@ -38,7 +38,10 @@
 								<td>{course.id}</td>
 								<td>{course.teacher_id}</td>
 								<td>
-									<button class="btn btn-primary text-white" on:click={() => enroll(course.id, $page.data.session.user.id)}>Enroll</button>
+									<button
+										class="btn btn-primary text-white"
+										on:click={() => enroll(course.id, $page.data.session.user.id)}>Enroll</button
+									>
 								</td>
 							</tr>
 						{/each}
