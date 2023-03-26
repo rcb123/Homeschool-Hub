@@ -19,6 +19,6 @@
 				<button class="btn btn-primary text-white normal-case">Submit a Support Request</button>
 			</a>
 		</div>
-		<p>Error: &#91;{$page.status}&#93; An error has occurred: {$page.error.message}</p>
+		<p>Error: &#91;{$page.status}&#93; An error has occurred: {$page.error?.message}</p>
 	</div>
 </main>
