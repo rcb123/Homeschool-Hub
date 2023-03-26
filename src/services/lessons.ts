@@ -3,7 +3,8 @@ import { supabase } from '$lib/supabaseClient';
 
 export async function createLesson(
 	name: string,
-	course_id: number,
+	description: string,
+	course_id: string,
 	date: Date,
 	time: Date,
 	duration: number,
@@ -12,6 +13,7 @@ export async function createLesson(
 	const response = await supabase.from('lessons').insert([
 		{
 			name: name,
+			description: description,
 			course_id: course_id,
 			date: date,
 			time: time,
@@ -28,7 +30,7 @@ export async function createLesson(
 }
 
 export async function updateLesson(
-	lesson_id: number,
+	lesson_id: string,
 	name: string,
 	date: Date,
 	time: Date,
@@ -47,7 +49,7 @@ export async function updateLesson(
 	return response;
 }
 
-export async function deleteLesson(lesson_id: number) {
+export async function deleteLesson(lesson_id: string) {
 	const response = await supabase.from('lessons').delete().eq('id', lesson_id);
 
 	if (response.error) {
@@ -59,7 +61,7 @@ export async function deleteLesson(lesson_id: number) {
 
 export async function createAssignment(
 	name: string,
-	lesson_id: number,
+	lesson_id: string,
 	deadline: Date,
 	status: string,
 	description = ''
@@ -82,7 +84,7 @@ export async function createAssignment(
 }
 
 export async function updateAssignment(
-	assignment_id: number,
+	assignment_id: string,
 	name: string,
 	deadline: Date,
 	status: string,
@@ -100,7 +102,7 @@ export async function updateAssignment(
 	return response;
 }
 
-export async function deleteAssignment(assignment_id: number) {
+export async function deleteAssignment(assignment_id: string) {
 	const response = await supabase.from('assignments').delete().eq('id', assignment_id);
 
 	if (response.error) {

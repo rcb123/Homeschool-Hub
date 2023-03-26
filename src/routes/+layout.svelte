@@ -1,8 +1,8 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { supabase } from '$lib/supabaseClient';
 	import { invalidate } from '$app/navigation';
-	import { onMount } from 'svelte';
-
+	
 	import '$root/app.css';
 
 	onMount(() => {
@@ -15,6 +15,7 @@
 		return () => {
 			subscription.unsubscribe();
 		};
+
 	});
 </script>
 
