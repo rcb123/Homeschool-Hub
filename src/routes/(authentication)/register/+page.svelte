@@ -1,9 +1,14 @@
 <script lang="ts">
-	import RegisterForm from "$components/RegisterForm.svelte";
+	import type { PageData } from './$types';
+	import RegisterForm from '$components/RegisterForm.svelte';
+
+	export let data: PageData;
+
+	const { supabase } = data;
 </script>
 
 <main>
 	<div class="lg:container mx-auto h-full w-full p-8">
-		<RegisterForm />
+		<RegisterForm {supabase} />
 	</div>
 </main>
