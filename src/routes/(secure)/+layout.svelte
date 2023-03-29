@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import SideBar from '$components/SideBar.svelte';
 	import LoginForm from '$components/LoginForm.svelte';
 	import Header from '$components/Header.svelte';
-	import SideBar from '$components/SideBar.svelte';
 </script>
 
 <SideBar />
@@ -10,7 +10,7 @@
 	{#if !$page.data.session}
 		<main>
 			<div class="lg:container mx-auto h-full w-full p-6">
-				<LoginForm />
+				<LoginForm supabase={$page.data.supabase} />
 			</div>
 		</main>
 	{:else}
