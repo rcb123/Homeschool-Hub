@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { AuthError, SupabaseClient } from '@supabase/supabase-js';
 	import type { ActionFailure } from '@sveltejs/kit';
+	import type { Database } from '$lib/database.types';
 	import { register } from '$root/services/auth';
-	import type { AuthError } from '@supabase/supabase-js';
 
 	let name = '';
 	let email = '';
@@ -41,12 +42,10 @@
 	let termsError: string | null = null;
 	let error: string | AuthError | null = null;
 
-	const handleSubmit = async () => {
-		response = await register(name, email, password, passwordConfirm, role, terms);
+	export let supabase: SupabaseClient<Database, 'public'>;
 
-		if (response.status == 200) {
-			window.location.href = '/';
-		}
+	const handleSubmit = async () => {
+		response = await register(supabase, name, email, password, passwordConfirm, role, terms);
 
 		nameError = response.data.nameError;
 		emailError = response.data.emailError;
