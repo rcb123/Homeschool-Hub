@@ -1,24 +1,23 @@
 import type { PageLoad } from './$types';
+import { redirect } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
 import db from '$lib/stores.js';
 
-export const load = (async ({ params }) => {
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
-	if (session) {
-		await db.courses.getAll(session);
-		await db.lessons.getAll();
-		await db.assignments.getAll();
-
-		const assignment = await db.assignments.getOne(params.assignmentID);
-		if (assignment) {
-			return assignment;
-		}
-
-		throw error(404, 'Assignment not found');
-	} else {
-		throw error(500, 'User not signed in');
+export const load: PageLoad = (async ({ params, parent }) => {
+	const { supabase, session } = await parent();
+	if (!session) {
+		redirect(303, '/');
 	}
-}) satisfies PageLoad;
+	await db.courses.getAll(supabase, session);
+	await db.lessons.getAll(supabase);
+	await db.assignments.getAll(supabase);
+
+	const assignment = await db.assignments.getOne(params.assignmentID);
+	if (assignment && session) {
+		return {
+			user: session.user,
+			assignment
+		};
+	}
+	throw error(404, 'Assignment not found');
+});
