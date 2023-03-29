@@ -1,7 +1,6 @@
-import { get, writable, type Writable } from 'svelte/store';
-import type { AuthSession, User } from '@supabase/supabase-js';
+import type { Database } from '$lib/database.types';
+import type { AuthSession, SupabaseClient, User } from '@supabase/supabase-js';
 import type {
-	AppUser,
 	Course,
 	Lesson,
 	Assignment,
@@ -10,48 +9,7 @@ import type {
 	Channel,
 	Message
 } from '$root/db/datamodels';
-import type { Role, UserStatus } from '$lib/types'
-import { supabase } from '$lib/supabaseClient';
-
-export const defaultUserStore: userStore = {
-	user: null
-};
-
-export type userStore = {
-	user: User | null;
-};
-
-// Current user store, stores auth info
-export const user: Writable<userStore> = writable(defaultUserStore);
-
-export const defaultAppUserStore: appUserStore = {
-	id: null,
-	created_at: new Date(Date.now()),
-	updated_at: new Date(Date.now()),
-	email: '',
-	name: '',
-	role: 'student',
-	status: 'OFFLINE',
-	auth_id: null
-}
-
-export type appUserStore = {
-	id?: string | null;
-	created_at: Date;
-	updated_at: Date;
-	email: string;
-	name: string;
-	avatar?: string;
-	role: Role;
-	status: UserStatus;
-	auth_id: string | null;
-}
-
-// Current app user store, stores profile info
-export const appUser: Writable<AppUser> = writable(defaultAppUserStore);
-
-// User role state
-export const userRole: Writable<'teacher' | 'student' | null> = writable(null);
+import { get, writable, type Writable } from 'svelte/store';
 
 // Course store
 export const courses: Writable<Course[]> = writable([]);
@@ -80,58 +38,41 @@ export const channels: Writable<Channel[]> = writable([]);
 // Messages store
 export const messages: Writable<Message[]> = writable([]);
 
-supabase.auth.onAuthStateChange(async (event, session) => {
-	console.log('auth change')
-	console.log(event)
-	if (event == 'SIGNED_IN' && session) {
-		console.log('event and session')
-		user.set({user: session.user});
-		const res = await supabase.from('users').select().eq('auth_id', session.user.id);
-		if (res.error) {
-			console.log(res.error);
-		} else {
-			console.log('setting new values')
-			const newUser: AppUser = res.data[0] as AppUser;
-			appUser.set(newUser);
-			console.log(appUser)
-			userRole.set(res.data[0].role);
-			console.log(userRole)
-		}
-	} else if (event == 'SIGNED_OUT') {
-		user.set(defaultUserStore);
-		appUser.set(defaultAppUserStore);
-		userRole.set(null);
-	}
-});
-
 export default {
 	courses: {
-		getAll: async (session: AuthSession) => {
-			const user_id = session.user.id;
-			// Retrieve course ids for courses the user is enrolled in
-			const enrollmentsRes = await supabase
-				.from('enrollments')
-				.select('course_id')
-				.eq('student_id', user_id);
+		getAll: async (
+			supabase: SupabaseClient<Database, 'public', never>,
+			session: AuthSession | null
+		) => {
+			if (session) {
+				const user_id = session.user.id;
+				// Retrieve course ids for courses the user is enrolled in
+				const enrollmentsRes = await supabase
+					.from('enrollments')
+					.select('course_id')
+					.eq('student_id', user_id);
 
-			if (enrollmentsRes.error) {
-				console.log(enrollmentsRes.error);
-				courses.set([]);
-				return;
+				if (enrollmentsRes.error) {
+					console.log(enrollmentsRes.error);
+					courses.set([]);
+					return;
+				}
+
+				const courseIds = enrollmentsRes.data?.map((enrollment) => enrollment.course_id);
+
+				// Retrieve only the courses that match the course ids
+				const coursesRes = await supabase.from('courses').select('*').in('id', courseIds);
+
+				if (coursesRes.error) {
+					console.log(coursesRes.error);
+					courses.set([]);
+					return;
+				}
+
+				courses.set(coursesRes.data as Course[]);
 			}
-
-			const courseIds = enrollmentsRes.data?.map((enrollment) => enrollment.course_id);
-
-			// Retrieve only the courses that match the course ids
-			const coursesRes = await supabase.from('courses').select('*').in('id', courseIds);
-
-			if (coursesRes.error) {
-				console.log(coursesRes.error);
-				courses.set([]);
-				return;
-			}
-
-			courses.set(coursesRes.data as Course[]);
+			console.log('No session!');
+			return;
 		},
 		// Finds match with given course_id from courses store
 		getOne: (course_id: string) => {
@@ -145,7 +86,7 @@ export default {
 			}
 			return storedCourses.find(match);
 		},
-		getLessons: async (course_id: string) => {
+		getLessons: async (supabase: SupabaseClient<Database, 'public', never>, course_id: string) => {
 			const storedCourses = get(courses);
 			if (!storedCourses) {
 				console.log('No courses found');
@@ -166,7 +107,7 @@ export default {
 		}
 	},
 	lessons: {
-		getAll: async () => {
+		getAll: async (supabase: SupabaseClient<Database, 'public', never>) => {
 			const storedCourses = get(courses);
 			if (!storedCourses) {
 				console.log('No courses found');
@@ -194,7 +135,7 @@ export default {
 		}
 	},
 	assignments: {
-		getAll: async () => {
+		getAll: async (supabase: SupabaseClient<Database, 'public', never>) => {
 			const storedLessons = get(lessons);
 			if (!storedLessons) {
 				console.log('No lessons found');
