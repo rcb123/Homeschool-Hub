@@ -14,8 +14,14 @@
 
 	const assignmentCreation = async () => {
 		loading = true;
-        success = false;
-		let response = await createAssignment(assignmentName, assignmentDescription, assignmentLesson, assignmentDeadline, assignmentStatus)
+		success = false;
+		let response = await createAssignment(
+			assignmentName,
+			assignmentDescription,
+			assignmentLesson,
+			assignmentDeadline,
+			assignmentStatus
+		);
 		console.log(response);
 		loading = false;
 		success = true;
@@ -23,9 +29,7 @@
 </script>
 
 <main>
-	<h1 class="text-xl text-center">
-		Assignment Creation Dashboard
-	</h1>
+	<h1 class="text-xl text-center">Assignment Creation Dashboard</h1>
 
 	<!-- Form to Create an Assignment-->
 
@@ -40,7 +44,11 @@
 				<label for="course-name" class="label">
 					<span class="label-text">Name:</span>
 				</label>
-				<input name="course-name" class="border-accent input w-full max-w-xs" bind:value={assignmentName} />
+				<input
+					name="course-name"
+					class="border-accent input w-full max-w-xs"
+					bind:value={assignmentName}
+				/>
 				<label for="course-name" class="label" />
 			</div>
 			<!-- Description Input -->
@@ -64,7 +72,12 @@
 				<label for="course-deadline" class="label">
 					<span class="label-text">Deadline:</span>
 				</label>
-				<input type="datetime-local" name="course-deadline" class="border-accent input w-full max-w-xs" bind:value={assignmentDeadline} />
+				<input
+					type="datetime-local"
+					name="course-deadline"
+					class="border-accent input w-full max-w-xs"
+					bind:value={assignmentDeadline}
+				/>
 				<label for="course-deadline" class="label" />
 			</div>
 			<!-- Status Input -->
@@ -72,7 +85,11 @@
 				<label for="course-status" class="label">
 					<span class="label-text">Status:</span>
 				</label>
-				<select name="course-status" class="border-accent input w-full max-w-xs" bind:value={assignmentStatus}>
+				<select
+					name="course-status"
+					class="border-accent input w-full max-w-xs"
+					bind:value={assignmentStatus}
+				>
 					<option value="in-progress">In Progress</option>
 					<option value="completed">Completed</option>
 				</select>
