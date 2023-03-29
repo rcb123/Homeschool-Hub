@@ -1,16 +1,16 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 
-  	export let data: PageData;
+	export let data: PageData;
 </script>
 
-<title>Assignment - {data.name}</title>
+<title>Assignment - {data.assignment.name}</title>
 <main>
-	<h1>{data.name}</h1>
+	<h1>{data.assignment.name}</h1>
 
-	<p>{data.description}</p>
+	<p>{data.assignment.description}</p>
 
-    <p>{data.deadline}</p>
+	<p>{data.assignment.deadline}</p>
 
-    <p>{data.status}</p>
+	<p>{data.assignment.status}</p>
 </main>

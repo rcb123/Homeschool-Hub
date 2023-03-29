@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import db from '$lib/stores.js';
 
-export const load: PageLoad = (async ({ params, parent }) => {
+export const load: PageLoad = async ({ params, parent }) => {
 	const { supabase, session } = await parent();
 	if (!session) {
 		redirect(303, '/');
@@ -13,11 +13,8 @@ export const load: PageLoad = (async ({ params, parent }) => {
 	await db.assignments.getAll(supabase);
 
 	const assignment = await db.assignments.getOne(params.assignmentID);
-	if (assignment && session) {
-		return {
-			user: session.user,
-			assignment
-		};
+	if (!assignment) {
+		throw error(404, 'Assignment not found');
 	}
-	throw error(404, 'Assignment not found');
-});
+	return { assignment };
+};
