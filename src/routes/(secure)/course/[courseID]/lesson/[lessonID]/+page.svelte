@@ -4,11 +4,11 @@
 	export let data: PageData;
 </script>
 
-<title>Lesson - {data.name}</title>
+<title>Lesson - {data.lesson.name}</title>
 <main>
-	<h1>{data.name}</h1>
+	<h1>{data.lesson.name}</h1>
 
-	<p>{data.description}</p>
+	<p>{data.lesson.description}</p>
 
 	<!-- <ul>
 		{#each lesson.resources as resource}

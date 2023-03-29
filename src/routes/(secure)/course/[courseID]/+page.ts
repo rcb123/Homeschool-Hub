@@ -14,5 +14,5 @@ export const load: PageLoad = async ({ params, parent }) => {
 	if (!course) {
 		throw error(404, 'Course not found');
 	}
-	return course;
+	return { course };
 };

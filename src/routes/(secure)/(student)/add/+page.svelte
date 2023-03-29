@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { page } from '$app/stores';
 	import { enroll } from '$root/services/courses';
 
 	export let data: PageData;
@@ -40,7 +39,7 @@
 								<td>
 									<button
 										class="btn btn-primary text-white"
-										on:click={() => enroll(course.id, $page.data.session.user.id)}>Enroll</button
+										on:click={() => enroll(course.id, data.session.user.id)}>Enroll</button
 									>
 								</td>
 							</tr>

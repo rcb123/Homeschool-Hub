@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { createCourse } from '$root/services/courses'
+	import { createCourse } from '$root/services/courses';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+
 	let courseName: string = '';
 	let courseDescription: string = '';
-	let courseTeacher: string = $page.data.session.user.id;
+	let courseTeacher: string = data.session.user.id;
 
 	let errorMessage: string = '';
 	let loading: boolean = false;
@@ -12,16 +15,14 @@
 	const courseCreation = async () => {
 		loading = true;
 		success = false;
-		await createCourse(courseName, courseTeacher, courseDescription)
+		await createCourse(courseName, courseTeacher, courseDescription);
 		loading = false;
 		success = true;
 	};
 </script>
 
 <main>
-	<h1 class="text-xl text-center">
-		Course Creation Dashboard
-	</h1>
+	<h1 class="text-xl text-center">Course Creation Dashboard</h1>
 
 	<!-- Form to Create a Course -->
 	<div class="lg:container m-auto p-8">
@@ -34,7 +35,11 @@
 				<label for="course-name" class="label">
 					<span class="label-text">Name:</span>
 				</label>
-				<input name="course-name" class="border-accent input w-full max-w-xs" bind:value={courseName} />
+				<input
+					name="course-name"
+					class="border-accent input w-full max-w-xs"
+					bind:value={courseName}
+				/>
 				<label for="course-name" class="label" />
 			</div>
 			<div class="form-control w-full max-w-xs">

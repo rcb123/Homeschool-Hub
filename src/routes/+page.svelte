@@ -1,7 +1,9 @@
-<script>
-	import { page } from '$app/stores';
+<script lang="ts">
+	import type { PageData } from './$types';
 	import header_fill from '$lib/assets/header_fill.svg';
 	import logo from '$lib/assets/logo.svg';
+
+	export let data: PageData;
 </script>
 
 <main>
@@ -42,11 +44,13 @@
 			</div>
 			<div class="flex items-center">
 				<div class="flex justify-around min-w-[18rem] max-w-[35vw]">
-					{#if !$page.data.session}
+					{#if !data.session}
 						<a href="/register" class="btn btn-primary text-white w-24">Register</a>
 						<a href="/login" class="btn btn-primary text-white w-24">Login</a>
 					{:else}
-						<a href="/hub" class="btn btn-primary text-white min-w-[14rem] w-[20vw]">Access Learning Hub</a>
+						<a href="/hub" class="btn btn-primary text-white min-w-[14rem] w-[20vw]"
+							>Access Learning Hub</a
+						>
 					{/if}
 				</div>
 				<div
