@@ -1,3 +1,7 @@
+import type { Role } from '$lib/types';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '$lib/database.types';
+import { fail } from '@sveltejs/kit';
 import {
 	isValidName,
 	isValidEmail,
@@ -6,11 +10,9 @@ import {
 	isValidRole,
 	isAcceptingTerms
 } from '$lib/Validators';
-import type { Role } from '$lib/types';
-import { fail } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
 
 export async function register(
+	supabase: SupabaseClient<Database, 'public'>,
 	name: string,
 	email: string,
 	password: string,
@@ -79,7 +81,11 @@ export async function register(
 	};
 }
 
-export async function login(email: string, password: string) {
+export async function login(
+	supabase: SupabaseClient<Database, 'public'>,
+	email: string,
+	password: string
+) {
 	const emailError = isValidEmail(email);
 	const passwordError = isValidPassword(password);
 	const validationError = emailError || passwordError;

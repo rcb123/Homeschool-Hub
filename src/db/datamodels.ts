@@ -1,9 +1,9 @@
 import type { Role, UserStatus } from '$lib/types';
 
 export interface BaseModel {
-	id?: string | null;
-	created_at: Date;
-	updated_at: Date;
+	id?: string | number | null;
+	created_at: string;
+	updated_at: string;
 }
 
 export interface AppUser extends BaseModel {
@@ -19,7 +19,7 @@ export interface Enrollment {
 	id?: string | null;
 	student_id: string | null;
 	course_id: string | null;
-	enrolled_at: Date;
+	enrolled_at: string;
 }
 
 export interface Course extends BaseModel {
@@ -32,8 +32,8 @@ export interface Lesson extends BaseModel {
 	name: string;
 	description: string;
 	course_id: string;
-	date: Date;
-	time: Date;
+	date: string;
+	time: string;
 	duration: string;
 	status: string;
 }
