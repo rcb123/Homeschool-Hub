@@ -1,9 +1,6 @@
 <script lang="ts">
-	import type { Course } from '$root/db/datamodels';
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
-	import { supabase } from '$lib/supabaseClient'; // import the Supabase client
-	import { courses } from '$lib/stores'; // import the courses store
+	import type { PageData } from './$types';
+	import { courses } from '$lib/stores';
 
 	let newCourseName = '';
 	let newCourseDescription = '';
@@ -15,32 +12,15 @@
 	let newAssignmentDueDate = '';
 	let newAssignmentCourse = '';
 
-	onMount(() => {
-		// fetch the courses for the logged-in teacher from the database
-		fetchCourses();
-	});
-
-	async function fetchCourses() {
-		const { data, error } = await supabase
-			.from('courses')
-			.select('*')
-			.eq('teacher_id', $page.data.session.user.id);
-
-		if (error) {
-			console.log(error);
-			return;
-		}
-
-		courses.set(data as Course[]);
-	}
+	export let data: PageData;
 
 	async function createCourse() {
-		const { data, error } = await supabase.from('courses').insert({
+		const { data: courseData, error } = await data.supabase.from('courses').insert({
 			name: newCourseName,
 			description: newCourseDescription,
 			start_date: newCourseStartDate,
 			end_date: newCourseEndDate,
-			teacher_id: $page.data.session.user.id
+			teacher_id: data.session.user.id
 		});
 
 		if (error) {
@@ -48,7 +28,9 @@
 			return;
 		}
 
-		courses.update((courses) => [...courses, data[0]]);
+		if (courseData) {
+			courses.update((courses) => [...courses, courseData[0]]);
+		}
 
 		// clear the form fields
 		newCourseName = '';
@@ -58,7 +40,7 @@
 	}
 
 	async function createAssignment() {
-		const { data, error } = await supabase.from('assignments').insert({
+		const { error } = await data.supabase.from('assignments').insert({
 			name: newAssignmentName,
 			description: newAssignmentDescription,
 			due_date: newAssignmentDueDate,
@@ -79,7 +61,8 @@
 </script>
 
 <div class="container">
-	<h1>Teacher Page</h1>
+	<h1>Teacher Dashboard</h1>
+	<h2>Welcome back {data.name}</h2>
 
 	<h2>Create a New Course</h2>
 	<form on:submit|preventDefault={createCourse}>
@@ -147,6 +130,8 @@
 							<td>{course.description}</td>
 						</tr>
 					{/each}
+				{:else if $courses == undefined}
+					<tr><th>Loading . . .</th></tr>
 				{:else}
 					<tr><th>You have not created any courses yet</th></tr>
 				{/if}
