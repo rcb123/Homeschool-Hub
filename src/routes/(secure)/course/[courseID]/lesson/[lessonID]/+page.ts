@@ -1,6 +1,5 @@
 import type { PageLoad } from './$types';
-import { redirect } from '@sveltejs/kit';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import db from '$lib/stores.js';
 
 export const load: PageLoad = async ({ params, parent }) => {
