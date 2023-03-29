@@ -1,11 +1,14 @@
 import type { PageLoad } from './$types';
-import { error as err } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
+import { error, redirect } from '@sveltejs/kit';
 
-export const load = (async () => {
-	const { data: courses, error} = await supabase.from('courses').select('*');
-	if (error) {
-		throw err(500, error);
+export const load: PageLoad = async ({ parent }) => {
+	const { supabase, session } = await parent();
+	if (!session) {
+		throw redirect(303, '/');
+	}
+	const { data: courses, error: courseError } = await supabase.from('courses').select('*');
+	if (courseError) {
+		throw error(500, courseError);
 	}
 	return { courses };
-}) satisfies PageLoad;
+};

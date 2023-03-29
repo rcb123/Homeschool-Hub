@@ -1,7 +1,13 @@
+import type { Database } from '$lib/database.types';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { error } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
 
-export async function createCourse(name: string, teacher_id: string, description = '') {
+export async function createCourse(
+	supabase: SupabaseClient<Database, 'public'>,
+	name: string,
+	teacher_id: string,
+	description = ''
+) {
 	const response = await supabase
 		.from('courses')
 		.insert([{ name: name, description: description, teacher_id: teacher_id }]);
@@ -13,7 +19,12 @@ export async function createCourse(name: string, teacher_id: string, description
 	return response;
 }
 
-export async function updateCourse(course_id: string, name: string, description: string) {
+export async function updateCourse(
+	supabase: SupabaseClient<Database, 'public'>,
+	course_id: number,
+	name: string,
+	description: string
+) {
 	const response = await supabase
 		.from('courses')
 		.update({ name: name, description: description })
@@ -26,7 +37,10 @@ export async function updateCourse(course_id: string, name: string, description:
 	return response;
 }
 
-export async function deleteCourse(course_id: string) {
+export async function deleteCourse(
+	supabase: SupabaseClient<Database, 'public'>,
+	course_id: number
+) {
 	const response = await supabase.from('courses').delete().eq('id', course_id);
 
 	if (response.error) {
@@ -36,7 +50,11 @@ export async function deleteCourse(course_id: string) {
 	return response;
 }
 
-export async function enroll(course_id: string, user_id: string) {
+export async function enroll(
+	supabase: SupabaseClient<Database, 'public'>,
+	course_id: number,
+	user_id: string
+) {
 	const response = await supabase
 		.from('enrollments')
 		.insert({ student_id: user_id, course_id: course_id });

@@ -39,7 +39,8 @@
 								<td>
 									<button
 										class="btn btn-primary text-white"
-										on:click={() => enroll(course.id, data.session.user.id)}>Enroll</button
+										on:click={() => enroll(data.supabase, course.id, data.session.user.id)}
+										>Enroll</button
 									>
 								</td>
 							</tr>
