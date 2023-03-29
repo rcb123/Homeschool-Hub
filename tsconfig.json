@@ -13,9 +13,10 @@
 		"paths": {
 			"$root/*": ["./src/*"],
 			"$components/*": ["./src/components/*"],
+			"$db/*": ["./src/db/*"],
 			"$static/*": ["/*"],
-			"$images/*": ["/images/*"],
-			"$lib":["./src/lib/"],
+			"$services/*": ["./src/services/*"],
+			"$lib":["./src/lib"],
   			"$lib/*":["./src/lib/*"],
 		}
 	}
