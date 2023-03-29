@@ -13,9 +13,8 @@ export const load: PageLoad = async ({ params, parent }) => {
 	await db.lessons.getAll(supabase);
 
 	const lesson = await db.lessons.getOne(params.lessonID);
-	if (lesson) {
-		return lesson;
+	if (!lesson) {
+		throw error(404, 'Lesson not found');
 	}
-
-	throw error(404, 'Lesson not found');
+	return { lesson };
 };
