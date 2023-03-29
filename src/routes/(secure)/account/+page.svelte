@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { supabase } from '$lib/supabaseClient';
+	import type { PageData } from "./$types";
 
 	let loading = false;
+	export let data: PageData;
 
 	async function signOut() {
 		try {
 			loading = true;
-			let { error } = await supabase.auth.signOut();
+			let { error } = await data.supabase.auth.signOut();
 			if (error) throw error;
 		} catch (error) {
 			if (error instanceof Error) {
