@@ -71,7 +71,7 @@
 		<input
 			type="text"
 			name="name"
-			class="input w-full max-w-xs {nameError ? 'input-error' : 'input-bordered'}"
+			class="input input-accent w-full max-w-xs {nameError ? 'input-error' : 'input-bordered'}"
 			bind:value={name}
 		/>
 		<label for="name" class="label">
@@ -91,7 +91,7 @@
 		<input
 			type="email"
 			name="email"
-			class="input w-full max-w-xs {emailError ? 'input-error' : 'input-bordered'}"
+			class="input input-accent w-full max-w-xs {emailError ? 'input-error' : 'input-bordered'}"
 			bind:value={email}
 		/>
 		<label for="email" class="label">
@@ -110,7 +110,7 @@
 		</label>
 		<input
 			type="password"
-			class="input w-full max-w-xs {passwordError ? 'input-error' : 'input-bordered'}"
+			class="input input-accent w-full max-w-xs {passwordError ? 'input-error' : 'input-bordered'}"
 			bind:value={password}
 		/>
 		<label for="password" class="label">
@@ -129,7 +129,7 @@
 		</label>
 		<input
 			type="password"
-			class="input w-full max-w-xs {passwordMatchError ? 'input-error' : 'input-bordered'}"
+			class="input input-accent w-full max-w-xs {passwordMatchError ? 'input-error' : 'input-bordered'}"
 			bind:value={passwordConfirm}
 		/>
 		<label for="passwordConfirm" class="label">
@@ -146,7 +146,7 @@
 		<label for="role" class="label">
 			<span class="label-text">Role:</span>
 		</label>
-		<select class="select w-full max-w-xs" bind:value={role}>
+		<select class="select select-accent w-full max-w-xs" bind:value={role}>
 			<option disabled selected>Choose your role:</option>
 			<option value="student">Student</option>
 			<option value="teacher">Teacher</option>
@@ -179,7 +179,7 @@
 
 	<!-- Submit Buttom -->
 	<div class="w-full max-w-xs">
-		<button type="submit" class="btn btn-primary w-full">Register</button>
+		<button type="submit" class="btn btn-primary w-full text-white">Register</button>
 	</div>
 </form>
 {#if response?.status == 200}

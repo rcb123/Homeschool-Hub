@@ -18,7 +18,7 @@
 	let passwordError: string | null = null;
 	let error: string | AuthError | null = null;
 
-	export let supabase: SupabaseClient<Database, "public">
+	export let supabase: SupabaseClient<Database, 'public'>;
 
 	const handleSubmit = async () => {
 		response = await login(supabase, email as string, password as string);
@@ -46,7 +46,7 @@
 			type="email"
 			name="email"
 			bind:value={email}
-			class="input w-full max-w-xs {emailError ? 'input-error' : 'input-bordered'}"
+			class="input input-accent w-full max-w-xs {emailError ? 'input-error' : 'input-bordered'}"
 		/>
 		<label for="email" class="label">
 			{#if emailError}
@@ -62,7 +62,7 @@
 			type="password"
 			name="password"
 			bind:value={password}
-			class="input w-full max-w-xs {passwordError ? 'input-error' : 'input-bordered'}"
+			class="input input-accent w-full max-w-xs {passwordError ? 'input-error' : 'input-bordered'}"
 		/>
 		<label for="password" class="label">
 			{#if passwordError}
@@ -70,8 +70,20 @@
 			{/if}
 		</label>
 	</div>
-	<div class="w-full max-w-xs">
-		<button class="btn btn-primary w-full" type="submit">Login</button>
+	<div class="form-control w-full max-w-xs">
+		<p class="pb-4 pt-1 text-right">
+			<a href="/passwordreset"><span class="link link-primary link-hover">Forgot password</span></a>
+		</p>
+	</div>
+	<div class="form-control w-full max-w-xs">
+		<button class="btn btn-primary w-full text-white" type="submit">Login</button>
+	</div>
+	<div class="form-control w-full max-w-xs">
+		<p class="py-4 text-center">
+			Don't have an account? <a href="/register"
+				><span class="link link-primary link-hover">Sign up</span></a
+			>
+		</p>
 	</div>
 	{#if error}
 		<div class="w-full rounded-lg bg-slate-100 mt-4 p-4 max-w-xs">
