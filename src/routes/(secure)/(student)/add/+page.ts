@@ -10,5 +10,5 @@ export const load: PageLoad = async ({ parent }) => {
 	if (courseError) {
 		throw error(500, courseError);
 	}
-	return { courses };
+	return { courses, supabase, session };
 };
