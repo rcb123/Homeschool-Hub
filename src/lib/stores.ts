@@ -70,6 +70,7 @@ export default {
 				}
 
 				courses.set(coursesRes.data as Course[]);
+				return;
 			}
 			console.log('No session!');
 			return;
