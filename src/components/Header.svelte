@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	let paths = $page.url.pathname.split('/');
-	paths.shift();
-	paths = capitalizePaths(paths);
+	let paths: string[] = [];
+	$: {
+		paths = $page.url.pathname.split('/');
+		paths.shift();
+		paths = capitalizePaths(paths);
+	}
 
 	function capitalizePaths(paths: string[]) {
 		return paths.map((path) => {
