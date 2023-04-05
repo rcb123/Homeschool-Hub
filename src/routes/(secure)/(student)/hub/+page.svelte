@@ -5,37 +5,109 @@
 	const { courses, assignments, lessons, name } = data;
 </script>
 
-<main class="m-8">
-	<div class="container mx-auto py-8">
-		<h1 class="text-4xl font-semibold mb-4">Student Hub</h1>
+<main class="mx-8 my-4">
+	<div class="container mx-auto">
+		<h1 class="text-center text-4xl font-medium">Student Hub</h1>
 		<h2 class="text-2xl font-medium">Welcome back, {name}</h2>
-
-		<div class="grid grid-cols-3 gap-4">
-			<div class="col-span-2">
-				<h2 class="text-2xl font-medium my-2">Your Courses</h2>
-				<ul class="list-disc list-inside">
+		<h2 class="text-2xl font-medium my-2">Your Courses</h2>
+		<div class="overflow-x-auto w-full">
+			<table class="table w-full">
+				<!-- Table Header -->
+				<thead>
+					<tr>
+						<th />
+						<th>Name</th>
+						<th>Description</th>
+						<th />
+					</tr>
+				</thead>
+				<tbody>
 					{#if $courses.length > 0}
 						{#each $courses as course}
-							<li>{course.name}</li>
+							<tr>
+								<th>
+									<label>
+										<input type="checkbox" class="checkbox" />
+									</label>
+								</th>
+								<td>
+									<div>
+										<div class="font-bold">{course.name}</div>
+										<div class="text-sm opacity-50">Course ID: {course.id}</div>
+									</div>
+								</td>
+								<td>
+									<div>{course.description}</div>
+									<div class="text-sm opacity-50">Teacher ID: {course.teacher_id}</div>
+								</td>
+								<th>
+									<a href="/course/{course.id}"
+										><button class="btn btn-ghost btn-sm">Course Page</button></a
+									>
+								</th>
+							</tr>
 						{/each}
 					{:else}
-						<p>You are not enrolled in any courses yet.</p>
+						<tr>
+							<td />
+							<td
+								>You are not enrolled in any courses yet. <a
+									href="/add"
+									class="btn btn-sm btn-ghost">Add a course now!</a
+								>
+							</td>
+						</tr>
 					{/if}
-				</ul>
-
-				<h2 class="text-2xl font-medium my-2">Upcoming Assignments</h2>
-				<ul class="list-disc list-inside">
+				</tbody>
+			</table>
+		</div>
+		<h2 class="text-2xl font-medium my-2">Upcoming Assignments</h2>
+		<div class="overflow-x-auto w-full">
+			<table class="table w-full">
+				<!-- Table Header -->
+				<thead>
+					<tr>
+						<th />
+						<th>Name</th>
+						<th>Description</th>
+						<th>Deadline</th>
+					</tr>
+				</thead>
+				<tbody>
 					{#if $assignments.length > 0}
 						{#each $assignments as assignment}
-							<li>{assignment.name} - Due {assignment.deadline}</li>
+							<tr>
+								<th>
+									<label>
+										<input type="checkbox" class="checkbox" />
+									</label>
+								</th>
+								<td>
+									<div>
+										<div class="font-bold">{assignment.name}</div>
+										<div class="text-sm opacity-50">Assignment ID: {assignment.id}</div>
+									</div>
+								</td>
+								<td>
+									<div>{assignment.description}</div>
+									<div class="text-sm opacity-50">Status: {assignment.status}</div>
+								</td>
+								<td>
+									<div>Due: {assignment.deadline}</div>
+								</td>
+							</tr>
 						{/each}
 					{:else}
-						<p>You have no upcoming assignments.</p>
+						<tr>
+							<td />
+							<td>You have no upcoming assignments.</td>
+						</tr>
 					{/if}
-				</ul>
-			</div>
+				</tbody>
+			</table>
+		</div>
 
-			<!-- <div>
+		<!-- <div>
 				<h2 class="text-2xl font-bold mb-2">Resources</h2>
 				<ul class="list-disc list-inside">
 					{#each resources as resource}
@@ -50,18 +122,55 @@
 					{/each}
 				</ul>
 			</div> -->
-		</div>
 		<div>
 			<h2 class="text-2xl font-medium my-2">Lessons</h2>
-			{#if $lessons.length > 0}
-				<ul>
-					{#each $lessons as lesson}
-						<li>{lesson.name} ({lesson.date})</li>
-					{/each}
-				</ul>
-			{:else}
-				<p>You have no lessons.</p>
-			{/if}
+			<div class="overflow-x-auto w-full">
+				<table class="table w-full">
+					<!-- Table Header -->
+					<thead>
+						<tr>
+							<th />
+							<th>Name</th>
+							<th>Description</th>
+							<th>Deadline</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#if $lessons.length > 0}
+							<ul>
+								{#each $lessons as lesson}
+									<tr>
+										<th>
+											<label>
+												<input type="checkbox" class="checkbox" />
+											</label>
+										</th>
+										<td>
+											<div>
+												<div class="font-bold">{lesson.name}</div>
+												<div class="text-sm opacity-50">Lesson ID: {lesson.id}</div>
+											</div>
+										</td>
+										<td>
+											<div>{lesson.description}</div>
+											<div class="text-sm opacity-50">Status: {lesson.status}</div>
+										</td>
+										<td>
+											<div>Date: {lesson.date} Time: {lesson.time}</div>
+											<div class="text-sm opacity-50">Length: {lesson.duration}</div>
+										</td>
+									</tr>
+								{/each}
+							</ul>
+						{:else}
+							<tr>
+								<td />
+								<td>You currently have no lessons.</td>
+							</tr>
+						{/if}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </main>
