@@ -4,7 +4,7 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/publi
 import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	event.locals.supabase = createSupabaseServerClient<Database, "public">({
+	event.locals.supabase = createSupabaseServerClient<Database, 'public'>({
 		supabaseUrl: PUBLIC_SUPABASE_URL,
 		supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
 		event
@@ -21,7 +21,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		} = await event.locals.supabase.auth.getSession();
 		return session;
 	};
-
 	return resolve(event, {
 		/**
 		 * There´s an issue with `filterSerializedResponseHeaders` not working when using `sequence`
