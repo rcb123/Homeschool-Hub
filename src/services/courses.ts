@@ -55,13 +55,23 @@ export async function enroll(
 	course_id: number,
 	user_id: string
 ) {
-	const response = await supabase
+	const { data: check, error: checkErr } = await supabase
+		.from('enrollments')
+		.select()
+		.eq('student_id', user_id)
+		.eq('course_id', course_id);
+	if (checkErr) {
+		throw error(500, checkErr);
+	}
+	if (check) {
+		throw error(500, 'Already enrolled in course!');
+	}
+	const { data: enrollData, error: err } = await supabase
 		.from('enrollments')
 		.insert({ student_id: user_id, course_id: course_id });
-
-	if (response.error) {
-		throw error(500, response.error);
+	if (err) {
+		throw error(500, err);
 	}
 
-	return response;
+	return enrollData;
 }
