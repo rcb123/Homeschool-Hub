@@ -18,10 +18,10 @@
 	};
 </script>
 
-<main class="m-8">
+<main class="px-8 py-4">
 	<div class="flex flex-col justify-center max-w-4xl mx-auto">
-		<h1 class="text-3xl font-bold text-center">Enroll in a Course</h1>
-		<h3 class="text-xl font-medium mb-2">Find a course:</h3>
+		<h1 class="text-4xl font-medium text-center">Enroll in a Course</h1>
+		<h3 class="text-2xl font-medium mb-2">Find a course:</h3>
 
 		<div class="overflow-x-auto">
 			<table class="table w-full max-w-[70vh] overflow-y-scroll z-0">

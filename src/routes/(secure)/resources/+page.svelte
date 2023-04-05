@@ -5,7 +5,7 @@
 </script>
 
 <main>
-	<h1 class="text-center text-4xl font-medium mt-4">Learning Resource Center</h1>
+	<h1 class="text-center text-4xl font-medium pt-2">Learning Resource Center</h1>
 
 	<!-- Textbook Resources -->
 	<div class="bg-accent my-4 mx-6 rounded-xl h-fit">

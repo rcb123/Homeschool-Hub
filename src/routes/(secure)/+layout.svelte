@@ -15,6 +15,8 @@
 		</main>
 	{:else}
 		<Header />
-		<slot />
+		<div class="mt-[4.5rem]">
+			<slot />
+		</div>
 	{/if}
 </div>

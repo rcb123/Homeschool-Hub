@@ -1,28 +1,33 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	let paths: string[] = [];
+	let paths: { label: string; path: string }[] = [];
 	$: {
-		paths = $page.url.pathname.split('/');
-		paths.shift();
-		paths = capitalizePaths(paths);
+		paths = $page.url.pathname
+			.split('/')
+			.filter((path) => path !== '')
+			.map((path, i) => ({
+				label: capitalizeFirstLetter(path),
+				path: $page.url.pathname
+					.split('/')
+					.slice(0, i + 2)
+					.join('/')
+			}));
 	}
 
-	function capitalizePaths(paths: string[]) {
-		return paths.map((path) => {
-			const capitalizedFirst = path.charAt(0).toUpperCase();
-			const rest = path.slice(1).toLowerCase();
-			return capitalizedFirst + rest;
-		});
+	function capitalizeFirstLetter(string: string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 </script>
 
-<div class="navbar bg-base-100 border-b-4 border-accent-focus shadow h-[4.5rem]">
+<div
+	class="navbar bg-base-100 border-b-4 border-accent-focus shadow h-[4.5rem] w-[calc(100vw-4rem)] fixed z-50 top-0"
+>
 	<div class="navbar-start ml-4">
 		<div class="text-sm breadcrumbs">
 			<ul>
-				{#each paths as path}
-					<li><a href={$page.url.pathname}>{path}</a></li>
+				{#each paths as { label, path }}
+					<li><a href={path}>{label}</a></li>
 				{/each}
 			</ul>
 		</div>

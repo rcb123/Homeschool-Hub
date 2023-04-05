@@ -5,11 +5,11 @@
 	const { courses, assignments, lessons, name } = data;
 </script>
 
-<main class="mx-8 my-4">
+<main class="px-8 py-2">
 	<div class="container mx-auto">
 		<h1 class="text-center text-4xl font-medium">Student Hub</h1>
-		<h2 class="text-2xl font-medium">Welcome back, {name}</h2>
-		<h2 class="text-2xl font-medium my-2">Your Courses</h2>
+		<h2 class="text-2xl font-medium pt-1">Welcome back, {name}</h2>
+		<h2 class="text-2xl font-medium py-1">Your Courses</h2>
 		<div class="overflow-x-auto w-full">
 			<table class="table w-full">
 				<!-- Table Header -->
