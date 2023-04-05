@@ -8,7 +8,7 @@
 <div
 	class="fixed top-0 left-0 h-screen w-16 m-0 flex flex-col bg-neutral text-neutral-content shadow-lg z-10"
 >
-	<SideBarLogoIcon tooltip="Homeschool Hub" ref="/" />
+	<SideBarLogoIcon tooltip="Homepage" ref="/" />
 	<hr class="border-solid border-2 my-1 border-accent-focus" />
 
 	{#each courses as course}
