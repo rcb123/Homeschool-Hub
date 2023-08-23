@@ -19,12 +19,13 @@
 	let error: string | AuthError | null = null;
 
 	export let supabase: SupabaseClient<Database, 'public'>;
+	export let redirect: string = '/';
 
 	const handleSubmit = async () => {
 		response = await login(supabase, email as string, password as string);
 
 		if (response.status == 200) {
-			window.location.href = '/';
+			window.location.href = redirect;
 		}
 
 		emailError = response.data.emailError;

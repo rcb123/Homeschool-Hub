@@ -1,22 +1,17 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
+	import type { PageData } from './$types';
 
 	let loading = false;
 	export let data: PageData;
 
 	async function signOut() {
-		try {
-			loading = true;
-			let { error } = await data.supabase.auth.signOut();
-			if (error) throw error;
-		} catch (error) {
-			if (error instanceof Error) {
-				alert(error.message);
-			}
-		} finally {
-			loading = false;
-			window.location.href = '/';
+		loading = true;
+		let { error } = await data.supabase.auth.signOut();
+		if (error) {
+			alert(error.message);
 		}
+		loading = false;
+		window.location.href = '/';
 	}
 </script>
 

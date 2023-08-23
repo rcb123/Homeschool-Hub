@@ -10,7 +10,7 @@
 	{#if !$page.data.session}
 		<main>
 			<div class="lg:container mx-auto h-full w-full p-6">
-				<LoginForm supabase={$page.data.supabase} />
+				<LoginForm supabase={$page.data.supabase} redirect='/account' />
 			</div>
 		</main>
 	{:else}
