@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 
 	let loading = false;
@@ -11,7 +12,7 @@
 			alert(error.message);
 		}
 		loading = false;
-		window.location.href = '/';
+		goto('/');
 	}
 </script>
 

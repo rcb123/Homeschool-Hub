@@ -3,6 +3,7 @@
 	import type { ActionFailure } from '@sveltejs/kit';
 	import type { Database } from '$lib/database.types';
 	import { login } from '$root/services/auth';
+	import { goto } from '$app/navigation';
 
 	let email: string | null;
 	let password: string | null;
@@ -25,7 +26,7 @@
 		response = await login(supabase, email as string, password as string);
 
 		if (response.status == 200) {
-			window.location.href = redirect;
+			goto(redirect);
 		}
 
 		emailError = response.data.emailError;
